@@ -38,41 +38,7 @@ def create_user():
         #add to a database
 
         return jsonify(data), 201 
-#GET
-#PUT 
-#POST update
-#DELETE
 
-
-
-def create_patient():
-    dbname = "part1db.db"
-    conn = sqlite3.connect(dbname)
-    c = conn.cursor()
-    statement = '''INSERT INTO patients (db parameters here ) VALUES (?,?,?,?,?,?);'''
-    data = () #tuple of all args here
-    c.execute(statement,data)
-    conn.commit()
-    return
-
-def get_appointments():
-
-    # need to do: implement functionality for filtering by times 
-    dbname = "part1db.db"
-    conn = sqlite3.connect(dbname)
-    c = conn.cursor()
-    c.execute('''SELECT FROM appointments where clinician == clinician info;''')
-    appointments = c.fetchall()
-    success = True
-    for appointment in appointment:
-            print("placeholder for displaying the appointments")
-            
-    conn.commit()
-    return success
-
-
-
-#CRUD OPERATIONS: Need 1 of each type per table, 12 total 
 
 
 
