@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import sqlite3
 import requests # for the api
+import NPITEST
 
 # This is my first attempt at using flask, I used a starter tutorial to get myself started
 # https://www.youtube.com/watch?v=zsYIw6RXjfM
@@ -42,41 +43,32 @@ def create_user():
 #CRUD FUNCS FOR CLINICIANS
 
 #CREATE 
-def create_clinician():
+def create_clinician(NPInum, firstName, lastName, state, specialty ):
 
     #https://www.youtube.com/watch?v=hpc5jyVpUpw&embeds_referring_euri=https%3A%2F%2Fwww.bing.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.bing.com&source_ve_path=Mjg2NjY
-
-    response = requests.get("https://npiregistry.cms.hhs.gov/api/?number=&enumeration_type=&taxonomy_description=&name_purpose=&first_name=steve&use_first_name_alias=&last_name=&organization_name=&address_purpose=&city=&state=&postal_code=&country_code=&limit=&skip=&pretty=&version=2.1")
-    dictionary = response.json()
-    dictionary['results'] # if the results are empty
-    print("There is no doctor with that NPI number, check it is entered correctly and try again")
-    
-    dictionary['results'] # if the results are not empty, but the names dont match
-    print("The name specified does not match the database. Ensure it is spellect correctly, and try again. ")
-
-
-
-    # if everything is all fine and dandy, go ahead and add to the database. 
-    dbname = "part1db.db"
-    conn = sqlite3.connect(dbname)
-    c = conn.cursor()
-    statement = '''INSERT INTO clinicians (db parameters here ) VALUES (?,?,?,?,?,?);'''
-    data = () #tuple of all args here
-    c.execute(statement,data)
-    conn.commit()
-    return
+    if (NPITEST.verifyNPI(NPInum)):
+         
+        # if everything is all fine and dandy, go ahead and add to the database. 
+        dbname = "part1DB.db"
+        conn = sqlite3.connect(dbname)
+        c = conn.cursor()
+        statement = '''INSERT INTO clinicians (NPInum, firstName, lastName, state, specialty) VALUES (?,?,?,?,?);'''
+        data = (NPInum, firstName, lastName, state, specialty) #tuple of all args here
+        c.execute(statement,data)
+        conn.commit()
+        return
 
 #READ CLINICIAN
-def read_clinician():
+def read_clinician(num):
     # need to do: implement functionality for filtering by times 
-    dbname = "part1db.db"
+    dbname = "part1DB.db"
     conn = sqlite3.connect(dbname)
     c = conn.cursor()
-    c.execute('''SELECT FROM clinician where NID == clinician info;''')
-    appointments = c.fetchall()
+    c.execute('''SELECT FROM clinicians where NPInum == ?''',(NPInum))
+    clinicians = c.fetchall()
     success = True
-    for appointment in appointment:
-            print("display clinician information ")
+    for clinician in clinicians:
+            print(clinician)
             
     conn.commit()
     conn.close()
@@ -84,13 +76,24 @@ def read_clinician():
 
 
 #UPDATE CLINICIAN
-def update_clinician():
-        dbname = "part1db.db"
+def update_clinician(NPInum,dictionary):
+        data =[]
+        statement = '''UPDATE  clinicians 
+                  SET '''
+        for field in ("firstName","lastName", "state", "specialty"):
+             if field in dictionary:
+                  data.append(dictionary[field])
+                  statement = statement + field + ''' = ?, '''
+
+        statement = statement[:len(statement)-2]
+        statement = statement + ''' where NPInum == ?'''
+        data.append(NPInum)
+        data = tuple(data)
+
+        dbname = "part1DB.db"
         conn = sqlite3.connect(dbname)
         c = conn.cursor()
-        c.execute('''UPDATE  clinician 
-                  SET f1 = v1, etc etc
-                  where NID == clinician info;''')
+        c.execute(statement,data)
         success = True        
         conn.commit()
         conn.close()
@@ -98,11 +101,11 @@ def update_clinician():
 
 
 #DELETE CLINICIAN
-def delete_clinician():
-        dbname = "part1db.db"
+def delete_clinician(NPInum):
+        dbname = "part1DB.db"
         conn = sqlite3.connect(dbname)
         c = conn.cursor()
-        c.execute('''DELETE FROM clinician where NID == clinician info;''')
+        c.execute('''DELETE FROM clinician where NPInum == ?;''',(NPInum))
         success = True        
         conn.commit()
         conn.close()

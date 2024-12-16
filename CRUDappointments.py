@@ -47,6 +47,7 @@ def update_appointment(NPInum, pid, date, time, dictionary):
         statement = statement[:len(statement) -2]
         statement = statement + ''' where pid == ? and NPInum == ? and date == ? and time == ?'''
         data.append(pid,NPInum, date,time)
+        data = tuple(data)
         conn = sqlite3.connect(dbname)
         c = conn.cursor()
         c.execute(statement, data)
