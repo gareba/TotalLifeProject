@@ -29,7 +29,7 @@ def read_appointment(NPInum, pid):
             print(appointment)
     conn.commit()
     conn.close()
-    return success
+    return appointments
 
 
 #UPDATE 

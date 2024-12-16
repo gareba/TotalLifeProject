@@ -1,6 +1,6 @@
 Hello there! Welcome to my Take Home Project!
 
-Due to time constraints I was only able to implement the specifications for Part 1. However, I do have some experience with front end development in similar contexts to this that I am more than happy to discuss during my review. 
+Due to time constraints I was only able to implement some of the specifications for Part 1, and I was unable to test those specifications as well as I would have liked. However, I do have some experience with front end development in similar contexts to this that I am more than happy to discuss during my review. 
 
 flaskWork.py is the main file for the server, and I have extracted various helper functions to other Python files in this repo.
 Dependencies: python, sqlite3, requests
