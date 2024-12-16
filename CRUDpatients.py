@@ -32,7 +32,7 @@ def read_patient(pid):
             
     conn.commit()
     conn.close()
-    return success
+    return patients[0]
 
 
 #UPDATE 
@@ -78,10 +78,10 @@ def delete_patient(pid):
 def main():
       #create_patient(1, "Gaven", "Barnes", 22, "Greenshield", 4421, 7805557423)
       #delete_patient(1)
-      #read_patient(1)
+      read_patient(1)
 
-      dictionary = {"firstName" : "Gaven2"}
-      update_patient(1,dictionary)
+      #dictionary = {"firstName" : "Gaven2"}
+      #update_patient(1,dictionary)
 
 if __name__ == "__main__":
         main()
