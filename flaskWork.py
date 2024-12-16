@@ -1,13 +1,90 @@
 from flask import Flask, request, jsonify
+import sqlite3
+
+# This is my first attempt at using flask, I used a starter tutorial to get myself started
+# https://www.youtube.com/watch?v=zsYIw6RXjfM
 
 app = Flask(__name__)
 
+@app.route("/")
+def home():
+    return "Home"
 
-@app.route("/get-clinician/<>")
-def get_clinician():
+@app.route("/get-user/<user_id>")
+def get_user(user_id):
+    user_data = {
+        "user_id" : user_id,
+        "name": "John Doe",
+        "email" : "Jd@email.com"
+    }
+    extra = request.args.get("extra")
+    if extra:
+        user_data["extra"] = extra
+    
+    return jsonify(user_data), 200 #returning data, use code 200
+
+#have to specify the functions used here (POST) since get is default
+@app.route("/create-user",methods = ["POST"])
+def create_user():
+    #only needed if you have multiple
+    if request.method == "POST":
+        data = request.get_json()
+
+        #add to a database
+
+        return jsonify(data), 201 
+#GET
+#PUT 
+#POST update
+#DELETE
+
+def create_clinician():
+    dbname = "part1db.db"
+    conn = sqlite3.connect(dbname)
+    c = conn.cursor()
+    statement = '''INSERT INTO clinicians (db parameters here ) VALUES (?,?,?,?,?,?);'''
+    data = () #tuple of all args here
+    c.execute(statement,data)
+    conn.commit()
     return
 
 
+def create_patient():
+    dbname = "part1db.db"
+    conn = sqlite3.connect(dbname)
+    c = conn.cursor()
+    statement = '''INSERT INTO patients (db parameters here ) VALUES (?,?,?,?,?,?);'''
+    data = () #tuple of all args here
+    c.execute(statement,data)
+    conn.commit()
+    return
 
-if __name__ == "main":
+def get_appointments():
+
+    # need to do: implement functionality for filtering by times 
+    dbname = "part1db.db"
+    conn = sqlite3.connect(dbname)
+    c = conn.cursor()
+    c.execute('''SELECT FROM appointments where clinician == clinician info;''')
+    appointments = c.fetchall()
+    success = True
+    for appointment in appointment:
+            print("placeholder for displaying the appointments")
+            
+    conn.commit()
+    return success
+
+
+
+#CRUD OPERATIONS: Need 1 of each type per table, 12 total 
+
+
+
+#@app.route("/get-clinician/<>")
+#def get_clinician():
+#    return
+
+
+
+if __name__ == "__main__":
     app.run(debug=True)
