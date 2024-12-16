@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify
 import sqlite3
 import requests # for the api
 
-#CRUD FUNCS FOR CLINICIANS
+
+#CRUD FUNCTIONS FOR patients table
+#Database name is hardcoded for development purposes, it will only work if there is a matching name and spec database in the same working directory as this file
 
 #CREATE 
 def create_patient(pid, firstName = None, lastName = None, age = None, insuranceProvider = None, policyNumber = None, emergContact = None):
@@ -81,4 +83,5 @@ def main():
       dictionary = {"firstName" : "Gaven2"}
       update_patient(1,dictionary)
 
-main()
+if __name__ == "__main__":
+        main()

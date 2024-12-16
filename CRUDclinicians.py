@@ -1,12 +1,15 @@
 import sqlite3
 import NPITEST
 
-#CRUD FUNCS FOR CLINICIANS
+
+#CRUD FUNCTIONS FOR clinicians table
+#Database name is hardcoded for development purposes, it will only work if there is a matching name and spec database in the same working directory as this file
+
 
 #CREATE 
 def create_clinician(NPInum, firstName, lastName, state, specialty ):
 
-    #https://www.youtube.com/watch?v=hpc5jyVpUpw&embeds_referring_euri=https%3A%2F%2Fwww.bing.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.bing.com&source_ve_path=Mjg2NjY
+   
     if (NPITEST.verifyNPI(NPInum)):
          
         # if everything is all fine and dandy, go ahead and add to the database. 
@@ -17,7 +20,9 @@ def create_clinician(NPInum, firstName, lastName, state, specialty ):
         data = (NPInum, firstName, lastName, state, specialty) #tuple of all args here
         c.execute(statement,data)
         conn.commit()
-        return
+        return True
+    
+    return False
 
 #READ CLINICIAN
 def read_clinician(NPInum):

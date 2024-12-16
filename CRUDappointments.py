@@ -2,12 +2,11 @@ from flask import Flask, request, jsonify
 import sqlite3
 import requests # for the api
 
-#CRUD FUNCS FOR appointments
+#CRUD FUNCTIONS FOR appointments table
+#Database name is hardcoded for development purposes, it will only work if there is a matching name and spec database in the same working directory as this file
 
 #CREATE 
 def create_appointment(NPInum, pid, date,time,location,duration):
-
-    # if everything is all fine and dandy, go ahead and add to the database. 
     dbname = "part1DB.db"
     conn = sqlite3.connect(dbname)
     c = conn.cursor()
@@ -28,7 +27,6 @@ def read_appointment(NPInum, pid):
     success = True
     for appointment in appointment:
             print(appointment)
-            
     conn.commit()
     conn.close()
     return success
