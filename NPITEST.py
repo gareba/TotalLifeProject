@@ -8,12 +8,9 @@ def verifyNPI(NPI, firstName, lastName, state):
     #print("https://npiregistry.cms.hhs.gov/api/?number="+ str(NPI) +"&enumeration_type=&taxonomy_description=&name_purpose=&first_name=&use_first_name_alias=&last_name=&organization_name=&address_purpose=&city=&state=&postal_code=&country_code=&limit=&skip=&pretty=&version=2.1")
     response = requests.get("https://npiregistry.cms.hhs.gov/api/?number="+ str(NPI) +"&enumeration_type=&taxonomy_description=&name_purpose=&first_name=&use_first_name_alias=&last_name=&organization_name=&address_purpose=&city=&state=&postal_code=&country_code=&limit=&skip=&pretty=&version=2.1")
     dictionary = response.json()
-    print(dictionary['result_count'])
-    print(dictionary['results'][0]['addresses'][0]['state'])
+    #print(dictionary['result_count'])
+    #print(dictionary['results'][0]['addresses'][0]['state'])
     
-
-
-
     
     if(dictionary['result_count']==0):
         print("There is no doctor with that NPI number, check it is entered correctly and try again")
