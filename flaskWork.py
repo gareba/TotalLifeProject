@@ -84,7 +84,7 @@ def read_clinician():
 
 
 #UPDATE CLINICIAN
-def delete_clinician():
+def update_clinician():
         dbname = "part1db.db"
         conn = sqlite3.connect(dbname)
         c = conn.cursor()
@@ -107,7 +107,6 @@ def delete_clinician():
         conn.commit()
         conn.close()
         return success
-
 
 
 
