@@ -1,0 +1,1 @@
+Hello there! Welcome to my project! This message is for the init commit. Code made by gareba, remote repo can be found at github.com/gareba/TotalLifeProject
