@@ -15,7 +15,7 @@ app = Flask(__name__)
 def home():
     return "Home"
 
-@app.route("get-clinician/<NPInum>")
+@app.route("/get-clinician/<NPInum>")
 def get_clinician(NPInum):
     
     clinicianTuple = CRUDclinicians.read_clinician(NPInum)
@@ -31,9 +31,13 @@ def get_clinician(NPInum):
     
 @app.route("/post-clinician/<NPInum>", methods = ["POST"])
 def post_clinician(NPInum):
-    CRUDclinicians.create_clinician(NPInum, request.args)
 
-    return jsonify({"success": True})
+    firstName = request.args.get("firstName")
+    lastName = request.args.get("lastName")
+    state = request.args.get("state")
+    success, message = CRUDclinicians.create_clinician(NPInum,firstName, lastName, state)
+    messages = ["There is no doctor with that NPI number, check it is entered correctly and try again","The name specified does not match the database. Ensure it is spelled correctly, and try again. ","Clinician found and added"]
+    return jsonify({"success": success, "message":messages[message]})
     
 
 @app.route("/modify-clinician/<NPInum>", methods = ["PUT"])
@@ -49,33 +53,40 @@ def remove_clinician(NPInum):
     CRUDclinicians.delete_clinician(NPInum)
     return jsonify({"success": True})
 
-@app.route("get-appointment/clinician/<NPInum>/patient/<pid>")
+@app.route("/get-appointment/clinician/<NPInum>/patient/<pid>")
 def get_appointment(NPInum,pid):
-    apptTuple = CRUDappointments.read_appointment(NPInum,pid)[0]
-    apptDict = dict()
-    apptDict["NPInum"] = apptTuple[0]
-    apptDict["pid"] = apptTuple[1]
-    apptDict["date"] = apptTuple[2]
-    apptDict["time"] = apptTuple[3]
-    apptDict["location"] = apptTuple[4]
-    apptDict["duration"] = apptTuple[5]
+    apptsDict = dict()
+    apptsList = CRUDappointments.read_appointment(NPInum,pid)
+    apptsDictList = []
+    
+    for apptTuple in apptsList:
+        apptDict = dict()
+        apptDict["NPInum"] = apptTuple[0]
+        apptDict["pid"] = apptTuple[1]
+        apptDict["date"] = apptTuple[2]
+        apptDict["time"] = apptTuple[3]
+        apptDict["location"] = apptTuple[4]
+        apptDict["duration"] = apptTuple[5]
+        apptsDictList.append(apptDict)
+        
+    apptsDict["appointments"] = apptsDictList
 
-    return jsonify(apptDict), 200
+    return jsonify(apptsDict), 200
 
 
 #retrieves all appointments for a specific doctor patient pair
-@app.route("post-appointment/clinician/<NPInum>/patient/<pid>/date/<date>/time/<time>", methods = ['POST'] )
+@app.route("/post-appointment/clinician/<NPInum>/patient/<pid>/date/<date>/time/<time>", methods = ['POST'] )
 def post_appointment(NPInum,pid,date,time):
     CRUDappointments.create_appointment(NPInum,pid,date,time)
     return jsonify({"success": True})
 
-@app.route("modify-appointment/clinician/<NPInum>/patient/<pid>/date/<date>/time/<time>", methods = ['PUT'])
+@app.route("/modify-appointment/clinician/<NPInum>/patient/<pid>/date/<date>/time/<time>", methods = ['PUT'])
 def modify_appointment(NPInum,pid,date,time):
     CRUDappointments.update_appointment(NPInum,pid,date,time, request.args)
     return jsonify({"success": True})
     
 
-@app.route("remove-appointment/clinician/<NPInum>/patient/<pid>/date/<date>/time/<time>", methods = ['DELETE'])
+@app.route("/remove-appointment/clinician/<NPInum>/patient/<pid>/date/<date>/time/<time>", methods = ['DELETE'])
 def remove_appointment(NPInum,pid,date,time):
     CRUDappointments.delete_appointment(NPInum,pid,date,time)
     return jsonify({"success": True})
@@ -101,7 +112,7 @@ def get_patient(pid):
 @app.route("/post-patient/<pid>", methods = ['POST'])
 def post_patient(pid):
 
-    CRUDpatients.create_patient(pid, request.args)
+    CRUDpatients.create_patient(pid)
 
     return jsonify({"success": True})
     

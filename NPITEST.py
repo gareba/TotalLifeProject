@@ -14,18 +14,18 @@ def verifyNPI(NPI, firstName, lastName, state):
     
     if(dictionary['result_count']==0):
         print("There is no doctor with that NPI number, check it is entered correctly and try again")
-        return False
+        return False, 0
     
     if(dictionary['results'][0]['basic']['first_name']!= firstName or dictionary['results'][0]['basic']['last_name'] != lastName or dictionary['results'][0]['addresses'][0]['state'] != state ):# if the results are not empty, but the names or state dont match
         print("The name specified does not match the database. Ensure it is spelled correctly, and try again. ")
-        return False
+        return False, 1
     
     else:
         print(dictionary['results'][0]['basic']['first_name'])
         print(dictionary['results'][0]['basic']['last_name'])
         print(dictionary['results'][0]['addresses'][0]['state'])
 
-        return True
+        return True, 2
 
 
         #print("Success!")

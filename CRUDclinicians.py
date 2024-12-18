@@ -7,10 +7,10 @@ import NPITEST
 
 
 #CREATE 
-def create_clinician(NPInum, firstName, lastName, state, specialty ):
-
+def create_clinician(NPInum, firstName, lastName, state, specialty= None ):
+    status, message = NPITEST.verifyNPI(NPInum, firstName, lastName,state)
    
-    if (NPITEST.verifyNPI(NPInum)):
+    if (status == True):
          
         # if everything is all fine and dandy, go ahead and add to the database. 
         dbname = "part1DB.db"
@@ -20,9 +20,9 @@ def create_clinician(NPInum, firstName, lastName, state, specialty ):
         data = (NPInum, firstName, lastName, state, specialty) #tuple of all args here
         c.execute(statement,data)
         conn.commit()
-        return True
+        return True, message
     
-    return False
+    return False, message
 
 #READ CLINICIAN
 def read_clinician(NPInum):
@@ -30,7 +30,8 @@ def read_clinician(NPInum):
     dbname = "part1DB.db"
     conn = sqlite3.connect(dbname)
     c = conn.cursor()
-    c.execute('''SELECT FROM clinicians where NPInum == ?''',(NPInum))
+    print(type(NPInum))
+    c.execute('''SELECT * FROM clinicians where NPInum == :clinician''',{"clinician":NPInum})
     clinicians = c.fetchall()
     success = True
     for clinician in clinicians:
@@ -38,7 +39,7 @@ def read_clinician(NPInum):
             
     conn.commit()
     conn.close()
-    return success
+    return clinicians[0]
 
 
 #UPDATE CLINICIAN
@@ -71,7 +72,7 @@ def delete_clinician(NPInum):
         dbname = "part1DB.db"
         conn = sqlite3.connect(dbname)
         c = conn.cursor()
-        c.execute('''DELETE FROM clinician where NPInum == ?;''',(NPInum))
+        c.execute('''DELETE FROM clinicians where NPInum == :clinician;''',{"clinician":NPInum})
         success = True        
         conn.commit()
         conn.close()
